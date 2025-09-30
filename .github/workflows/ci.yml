@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - branch: main
+          - branch: master
             image_tag: latest
           - branch: develop
             image_tag: dev
