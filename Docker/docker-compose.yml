@@ -1,0 +1,31 @@
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: ./Docker/Dockerfile
+    container_name: simpleapi-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=simpleapi;Username=${PSQL_USERNAME};Password=${PSQL_PASSWORD}
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+    depends_on:
+      - db
+
+  db:
+    image: postgres:18-alpine
+    container_name: simpleapi-db
+    restart: always
+    environment:
+      - POSTGRES_USER=${PSQL_USERNAME}
+      - POSTGRES_PASSWORD=${PSQL_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+networks:
+  default:
+    name: simpleapi-network
+
+volumes:
+  db_data:

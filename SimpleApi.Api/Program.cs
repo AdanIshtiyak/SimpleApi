@@ -21,15 +21,15 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-  var db = scope.ServiceProvider.GetRequiredService<SimpleDbContext>();
+//using (var scope = app.Services.CreateScope())
+//{
+//  var db = scope.ServiceProvider.GetRequiredService<SimpleDbContext>();
 
-  db.Database.Migrate();
+//  db.Database.Migrate();
 
-  var seeder = new DbSeeder(db);
-  seeder.Seeder();
-}
+//  var seeder = new DbSeeder(db);
+//  seeder.Seeder();
+//}
 
 // Configure the HTTP request pipeline.
 
