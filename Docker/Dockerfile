@@ -5,6 +5,7 @@ WORKDIR /src
 COPY *.sln .
 COPY SimpleApi.Api/SimpleApi.Api.csproj SimpleApi.Api/
 COPY SimpleApi.Services/SimpleApi.Services.csproj SimpleApi.Services/
+COPY SimpleApi.Tests/SimpleApi.Tests.csproj SimpleApi.Tests/
 RUN dotnet restore
 
 COPY . .
