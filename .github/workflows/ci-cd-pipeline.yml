@@ -72,10 +72,10 @@ jobs:
       run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.image_tag }}
 
     - name: Stop old container
-      run: docker stop simpleapi -ErrorAction SilentlyContinue
+      run: docker stop simpleapi || true
 
     - name: Remove old container
-      run: docker rm simpleapi -ErrorAction SilentlyContinue
+      run: docker rm simpleapi || true
 
     - name: Run new container
       run: docker run -d --name simpleapi -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.image_tag }}
