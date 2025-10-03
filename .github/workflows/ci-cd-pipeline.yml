@@ -8,20 +8,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    # Define docker image tag
-    strategy:
-      matrix:
-        include:
-          - branch: master
-            image_tag: latest
-          - branch: develop
-            image_tag: dev
+    outputs:
+     image_tag: ${{ steps.return_docker_image_tag.outputs.docker_image_tag }}
 
     steps:
       # 1. Checkout
       - name: Checkout repository
         uses: actions/checkout@v3
+      
+      - name: Define image tag
+        run: |
+          if [ "${GITHUB_REF_NAME}" == "master" ]; then
+            echo "DOCKER_IMAGE_TAG=latest" >> $GITHUB_ENV
+          else
+            echo "DOCKER_IMAGE_TAG=dev" >> $GITHUB_ENV
+          fi
 
       # 2. Install .NET SDK
       - name: Setup .NET
@@ -53,24 +54,22 @@ jobs:
           context: .
           file: Docker/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ matrix.image_tag }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ env.DOCKER_IMAGE_TAG }}
+
+      # 6. Return docker image tag for next job
+      - name: Return docker image tag
+        id: return_docker_image_tag
+        run: echo "docker_image_tag=${DOCKER_IMAGE_TAG}" >> $GITHUB_OUTPUT
 
   deploy:
     name: Deploy to server
     runs-on: self-hosted
     needs: build 
-
-    strategy:
-      matrix:
-        include:
-          - branch: master
-            image_tag: latest
-          - branch: develop 
-            image_tag: dev
+    if: github.ref_name == "master"
 
     steps:
       - name: Pull latest image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ matrix.image_tag }}
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.docker_image_tag }}
 
       - name: Stop old container
         run: docker stop simpleapi || true
@@ -79,4 +78,4 @@ jobs:
         run: docker rm simpleapi || true
 
       - name: Run new container
-        run: docker run -d --name simpleapi -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ matrix.image_tag }}
+        run: docker run -d --name simpleapi -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.docker_image_tag }}
