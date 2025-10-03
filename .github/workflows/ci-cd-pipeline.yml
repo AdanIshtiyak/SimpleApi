@@ -66,17 +66,28 @@ jobs:
     runs-on: self-hosted
     needs: build 
     if: ${{ github.ref_name == 'master' }}
+      
+    env:
+      IMAGE_TAG: ${{ needs.build.outputs.image_tag }}
 
     steps:
-    - name: Pull latest image
-      run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.image_tag }}
+    - name: Pull docker images
+      run: |
+       docker pull ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ env.IMAGE_TAG }}
+       docker pull postgres:18-alpine
 
-    - name: Stop old container
-      run: docker stop simpleapi; exit 0
+    - name: Stop old containers
+      run: docker-compose -f Docker/docker-compose.yml down
 
-    - name: Remove old container
-      run: docker rm simpleapi; exit 0
+    - name: Show working dir
+      run: pwd && ls -la Docker
 
+    - name: Create .env file
+      run: |
+        echo "PSQL_USERNAME=${{ secrets.PSQL_USERNAME }}" >> .env
+        echo "PSQL_PASSWORD=${{ secrets.PSQL_PASSWORD }}" >> .env
+        echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> .env
+        echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
 
-    - name: Run new container
-      run: docker run -d --name simpleapi -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.image_tag }}
+    - name: Run new containers
+      run: docker-compose -f Docker/docker-compose.yml up -d
