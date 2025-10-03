@@ -18,10 +18,10 @@ jobs:
       
       - name: Define image tag
         run: |
-          if [ "${GITHUB_REF_NAME}" == "master" ]; then
-            echo "DOCKER_IMAGE_TAG=latest" >> $GITHUB_ENV
+          if [ "${GITHUB_REF_NAME}" == 'master' ]; then
+            echo 'DOCKER_IMAGE_TAG=latest' >> $GITHUB_ENV
           else
-            echo "DOCKER_IMAGE_TAG=dev" >> $GITHUB_ENV
+            echo 'DOCKER_IMAGE_TAG=dev' >> $GITHUB_ENV
           fi
 
       # 2. Install .NET SDK
@@ -65,7 +65,7 @@ jobs:
     name: Deploy to server
     runs-on: self-hosted
     needs: build 
-    if: github.ref_name == "master"
+    if: ${{ github.ref_name == 'master' }}
 
     steps:
       - name: Pull latest image
