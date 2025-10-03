@@ -77,7 +77,7 @@ jobs:
        docker pull postgres:18-alpine
 
     - name: Stop old containers
-      run: docker-compose -f Docker/docker-compose.yml down
+      run: docker-compose -f Docker/docker-compose.yml down; exit 0
 
     - name: Show working dir
       run: pwd && ls -la Docker
