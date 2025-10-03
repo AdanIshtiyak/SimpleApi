@@ -78,4 +78,4 @@ jobs:
       run: docker rm simpleapi -ErrorAction SilentlyContinue
 
     - name: Run new container
-      run: docker run -d --name simpleapi -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.docker_image_tag }}
+      run: docker run -d --name simpleapi -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.image_tag }}
