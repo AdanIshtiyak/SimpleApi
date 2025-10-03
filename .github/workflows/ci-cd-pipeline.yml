@@ -73,7 +73,7 @@ jobs:
 
     steps:
     - name: Pull latest image
-      shell: pwsh
+      shell: PowerShell
       run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.image_tag }}
 
     - name: Stop old container
