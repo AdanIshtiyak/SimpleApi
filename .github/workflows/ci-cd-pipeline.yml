@@ -80,7 +80,7 @@ jobs:
       run: docker-compose -f Docker/docker-compose.yml down; exit 0
 
     - name: Show working dir
-      run: pwd && ls -la Docker
+      run: dir
 
     - name: Create .env file
       run: |
