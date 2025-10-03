@@ -68,14 +68,14 @@ jobs:
     if: ${{ github.ref_name == 'master' }}
 
     steps:
-      - name: Pull latest image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.docker_image_tag }}
+    - name: Pull latest image
+      run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.docker_image_tag }}
 
-      - name: Stop old container
-        run: docker stop simpleapi || true
+    - name: Stop old container
+      run: docker stop simpleapi -ErrorAction SilentlyContinue
 
-      - name: Remove old container
-        run: docker rm simpleapi || true
+    - name: Remove old container
+      run: docker rm simpleapi -ErrorAction SilentlyContinue
 
-      - name: Run new container
-        run: docker run -d --name simpleapi -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.docker_image_tag }}
+    - name: Run new container
+      run: docker run -d --name simpleapi -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/simpleapi:${{ needs.build.outputs.docker_image_tag }}
