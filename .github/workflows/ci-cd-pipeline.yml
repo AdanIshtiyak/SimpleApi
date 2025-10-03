@@ -84,10 +84,10 @@ jobs:
 
     - name: Create .env file
       run: |
-        echo "PSQL_USERNAME=${{ secrets.PSQL_USERNAME }}" >> Docker/.env
-        echo "PSQL_PASSWORD=${{ secrets.PSQL_PASSWORD }}" >> Docker/.env
-        echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> Docker/.env
-        echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> Docker/.env
+        echo "PSQL_USERNAME=${{ secrets.PSQL_USERNAME }}" >> .env
+        echo "PSQL_PASSWORD=${{ secrets.PSQL_PASSWORD }}" >> .env
+        echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> .env
+        echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
 
     - name: Run new containers
-      run: docker-compose -f Docker/docker-compose.yml up -d
+      run: docker-compose -f Docker/docker-compose.yml --env-file .env up -d
