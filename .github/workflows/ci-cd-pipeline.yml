@@ -83,7 +83,6 @@ jobs:
       run: dir
 
     - name: Create .env file
-      shell: pwsh
       run: |
         Set-Content -Path .env -Value "PSQL_USERNAME=${{ secrets.PSQL_USERNAME }}" -Encoding utf8NoBOM
         Add-Content -Path .env -Value "PSQL_PASSWORD=${{ secrets.PSQL_PASSWORD }}"
