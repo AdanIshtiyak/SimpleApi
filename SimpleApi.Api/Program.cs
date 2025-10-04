@@ -40,7 +40,7 @@ if (isNeedRunSeeders)
 
 var isNeedSwagger = builder.Configuration.GetValue("IS_NEED_SWAGGER", true);
 
-if ()
+if (isNeedSwagger)
 {
   app.UseSwagger();
   app.UseSwaggerUI();
