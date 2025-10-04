@@ -66,9 +66,12 @@ jobs:
     runs-on: self-hosted
     needs: build 
     if: ${{ github.ref_name == 'master' }}
-      
+
     env:
       IMAGE_TAG: ${{ needs.build.outputs.image_tag }}
+      PSQL_USERNAME: ${{ secrets.PSQL_USERNAME }}
+      PSQL_PASSWORD: ${{ secrets.PSQL_PASSWORD }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
     steps:
     - name: Pull docker images
@@ -79,15 +82,9 @@ jobs:
     - name: Stop old containers
       run: docker-compose -f Docker/docker-compose.yml down; exit 0
 
-    - name: Show working dir
-      run: dir
-
-    - name: Create .env file
-      run: |
-        "PSQL_USERNAME=${{ secrets.PSQL_USERNAME }}" | Out-File -FilePath .env -Encoding ASCII
-        "PSQL_PASSWORD=${{ secrets.PSQL_PASSWORD }}" | Out-File -FilePath .env -Append -Encoding ASCII
-        "IMAGE_TAG=${{ env.IMAGE_TAG }}" | Out-File -FilePath .env -Append -Encoding ASCII
-        "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" | Out-File -FilePath .env -Append -Encoding ASCII
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      run: cd simpleapi
 
     - name: Run new containers
-      run: docker-compose -f Docker/docker-compose.yml --env-file .env up -d
+      run: docker-compose -f Docker/docker-compose.yml up -d
