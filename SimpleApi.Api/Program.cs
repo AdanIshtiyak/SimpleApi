@@ -38,7 +38,9 @@ if (isNeedRunSeeders)
 
 // Configure the HTTP request pipeline.
 
-if (app.Environment.IsDevelopment())
+var isNeedSwagger = builder.Configuration.GetValue("IS_NEED_SWAGGER", true);
+
+if ()
 {
   app.UseSwagger();
   app.UseSwaggerUI();

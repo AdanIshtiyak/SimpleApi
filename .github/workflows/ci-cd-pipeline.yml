@@ -72,6 +72,7 @@ jobs:
       PSQL_USERNAME: ${{ secrets.PSQL_USERNAME }}
       PSQL_PASSWORD: ${{ secrets.PSQL_PASSWORD }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      IS_NEED_SWAGGER: true
 
     steps:
     - name: Pull docker images
