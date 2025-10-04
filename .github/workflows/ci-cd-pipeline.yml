@@ -83,11 +83,12 @@ jobs:
       run: dir
 
     - name: Create .env file
+      shell: pwsh
       run: |
-        printf "PSQL_USERNAME=${{ secrets.PSQL_USERNAME }}\n" > .env
-        printf "PSQL_PASSWORD=${{ secrets.PSQL_PASSWORD }}\n" >> .env
-        printf "IMAGE_TAG=${{ env.IMAGE_TAG }}\n" >> .env
-        printf "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}\n" >> .env
+        Set-Content -Path .env -Value "PSQL_USERNAME=${{ secrets.PSQL_USERNAME }}" -Encoding utf8NoBOM
+        Add-Content -Path .env -Value "PSQL_PASSWORD=${{ secrets.PSQL_PASSWORD }}"
+        Add-Content -Path .env -Value "IMAGE_TAG=${{ env.IMAGE_TAG }}"
+        Add-Content -Path .env -Value "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}"
 
     - name: Run new containers
       run: docker-compose -f Docker/docker-compose.yml --env-file .env up -d
